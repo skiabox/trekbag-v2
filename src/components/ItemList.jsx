@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import Select from "react-select";
 import EmptyView from "./EmptyView";
 import Item from "./Item";
-import { useItemsContext } from "../lib/hooks";
+import { useItemsStore } from "../stores/itemsStore";
 
 const sortingOptions = [
   {
@@ -22,8 +22,10 @@ const sortingOptions = [
 const ItemList = () => {
   const [sortBy, setSortBy] = useState("default");
 
-  //get what we want from the context
-  const { items, handleDeleteItem, handleToggleItem } = useItemsContext();
+  //get what we want from the zustand Items store
+  const items = useItemsStore(state => state.items);
+  const deleteItem = useItemsStore(state => state.deleteItem);
+  const toggleItem = useItemsStore(state => state.toggleItem);
 
   // Preserve the original array because sort is not returning a new array like map or filter
   const sortedItems = useMemo(
@@ -58,8 +60,8 @@ const ItemList = () => {
         <Item
           item={item}
           key={item.id}
-          onDeleteItem={handleDeleteItem}
-          onToggleItem={handleToggleItem}
+          onDeleteItem={deleteItem}
+          onToggleItem={toggleItem}
         />
       ))}
     </ul>
